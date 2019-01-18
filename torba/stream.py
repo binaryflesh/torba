@@ -149,9 +149,11 @@ class Stream:
     @staticmethod
     def _cancel_and_callback(subscription: BroadcastSubscription, future: asyncio.Future, value):
         subscription.cancel()
-        future.set_result(value)
+        if not future.done():
+            future.set_result(value)
 
     @staticmethod
     def _cancel_and_error(subscription: BroadcastSubscription, future: asyncio.Future, exception):
         subscription.cancel()
-        future.set_exception(exception)
+        if not future.done():
+            future.set_exception(exception)
